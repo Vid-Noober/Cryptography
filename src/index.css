@@ -1,0 +1,11 @@
+@import "tailwindcss";
+/* Import Google Font at the top of your CSS file */
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Playwright+NO:wght@100;200;300;400&display=swap');
+
+.project-title {
+  font-family: 'Playwright NO', cursive;
+}
+
+
+
