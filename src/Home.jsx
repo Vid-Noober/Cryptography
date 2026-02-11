@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Lorkru from './assets/public/lorkru.png'
 import './App.css'; // Make sure Playwright NO is imported here
 
 const Home = () => {
@@ -14,7 +15,7 @@ const Home = () => {
       name: "Mr. LIM Seyha",
       role: "Mathematics Lecturer",
       date: "February 22, 2026",
-      img: "https://scontent.fpnh5-5.fna.fbcdn.net/v/t39.30808-6/476806530_2528440944012428_58655262053192815_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHF8YwkidrtYscFoSUh3t7siMJfufmIPn-Iwl-5-Yg-f0GiS_1SMeWNG8Q7EVHjIcplI09oY2Gano2iR49V6xFm&_nc_ohc=P_kgZhXWv48Q7kNvwE7pMX5&_nc_oc=AdkAUUNoqff8rlzXA6w6zSevRLThYGuXqu2wez3dTKYpzArxfzF70ZMQoXnVuecaxNc&_nc_zt=23&_nc_ht=scontent.fpnh5-5.fna&_nc_gid=I4k3QBk4LzpclgCExcizpQ&oh=00_AfsdHVUmuL2xbXImPJqOkfiXe-sGuWflxrxSlla_x2QtAA&oe=6988F851"
+      img: Lorkru
     },
     members: [
       { name: "Mr. Voeurn Davith", id: "ID: 000065012" },
