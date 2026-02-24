@@ -11,26 +11,6 @@ const History = () => {
 
   return (
     <div className="min-h-screen bg-slate-100 py-12 px-4 space-y-12 font-sans">
-      {/* Top Navigation Bar */}
-      <nav className="bg-white shadow sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto h-16 flex items-center justify-center gap-8 text-sm font-medium">
-          <a
-            onClick={() => navigate("/")}
-            className="text-blue-600 border-b-2 border-blue-600 pb-1 cursor-pointer project-title"
-          >
-            Home
-          </a>
-          <a
-            onClick={() =>
-              document.getElementById("classical")?.scrollIntoView({ behavior: "smooth" })
-            }
-            className="hover:text-blue-600 cursor-pointer project-title"
-          >
-            Projects
-          </a>
-        </div>
-      </nav>
-
       {/* Page Header */}
       <h1 className="text-4xl font-extrabold text-center text-indigo-700 mb-8 project-title">
         History of Cryptography

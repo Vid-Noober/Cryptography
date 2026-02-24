@@ -1,10 +1,10 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Lorkru from './assets/public/lorkru.png'
-import './App.css'; // Make sure Playwright NO is imported here
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import Lorkru from "./assets/public/lorkru.png";
+import "./App.css";
 
 const Home = () => {
-  const navigate = useNavigate(); // Navigation hook
+  const navigate = useNavigate();
 
   const projectData = {
     university: "ROYAL UNIVERSITY OF PHNOM PENH",
@@ -15,7 +15,7 @@ const Home = () => {
       name: "Mr. LIM Seyha",
       role: "Mathematics Lecturer",
       date: "February 22, 2026",
-      img: Lorkru
+      img: Lorkru,
     },
     members: [
       { name: "Mr. Voeurn Davith", id: "ID: 000065012" },
@@ -28,35 +28,11 @@ const Home = () => {
       { name: "Mr. Heng Ordom", id: "ID: 000072987" },
     ],
     description:
-      "This demonstration presents applications of number theory, including classic encryption methods and the RSA algorithm."
+      "This demonstration presents applications of number theory, including classical encryption methods and the RSA algorithm.",
   };
 
   return (
     <div className="min-h-screen text-slate-800 bg-slate-50 font-sans">
-      
-      {/* Navbar */}
-      <nav className="bg-white shadow sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto h-16 flex items-center justify-center gap-8 text-sm font-medium">
-          <a
-            onClick={() => navigate("/")}
-            className="text-blue-600 border-b-2 border-blue-600 pb-1 cursor-pointer"
-          >
-            Home
-          </a>
-          <a
-            onClick={() => navigate("/history")}
-            className="hover:text-blue-600 cursor-pointer"
-          >
-            Projects
-          </a>
-          <a
-            onClick={() => document.getElementById("team")?.scrollIntoView({ behavior: "smooth" })}
-            className="hover:text-blue-600 cursor-pointer"
-          >
-            Team
-          </a>
-        </div>
-      </nav>
 
       {/* Header */}
       <header className="text-center py-12 px-6">
@@ -79,7 +55,7 @@ const Home = () => {
 
       <main className="max-w-6xl mx-auto px-6 space-y-8">
         
-        {/* Top Row: Advisor & Project Description */}
+        {/* Top Row */}
         <div className="grid md:grid-cols-2 gap-8">
           
           {/* Advisor Card */}
@@ -92,10 +68,12 @@ const Home = () => {
               alt="Advisor"
               className="w-24 h-24 rounded-full object-cover mb-4 ring-4 ring-blue-50"
             />
-            <p className="font-bold text-lg text-slate-800 project-title">{projectData.advisor.name}</p>
+            <p className="font-bold text-lg text-slate-800 project-title">
+              {projectData.advisor.name}
+            </p>
             <p className="text-sm text-slate-500">{projectData.advisor.role}</p>
             <p className="text-xs font-medium text-blue-500 mt-2 bg-blue-50 px-3 py-1 rounded-full">
-                {projectData.advisor.date}
+              {projectData.advisor.date}
             </p>
           </div>
 
@@ -105,24 +83,28 @@ const Home = () => {
               Project Overview
             </h3>
             <p className="text-slate-600 leading-relaxed text-lg italic text-center md:text-left">
-                "{projectData.description}"
+              "{projectData.description}"
             </p>
-            <div className="mt-8 flex justify-center md:justify-start gap-4">
-              {/* View Demo Button */}
+
+            <div className="mt-8 flex flex-wrap justify-center md:justify-start gap-4">
               <button
                 onClick={() => navigate("/history")}
-                className="bg-green-600 text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-green-700 transition shadow-lg shadow-green-100"
+                className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-100"
               >
                 View Demo
               </button>
-              <button className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-100">
-                Download Report
+
+              <button
+                onClick={() => navigate("/info")}
+                className="bg-green-600 text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-green-700 transition shadow-lg shadow-green-100"
+              >
+                View Cryptography Report
               </button>
             </div>
           </div>
         </div>
 
-        {/* Bottom Row: Team Members */}
+        {/* Team Section */}
         <div id="team" className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
           <h3 className="text-xs uppercase font-semibold text-slate-400 mb-8 tracking-wider text-center project-title">
             Team Members
@@ -143,13 +125,13 @@ const Home = () => {
             ))}
           </div>
         </div>
-
       </main>
 
       {/* Footer */}
       <footer className="text-center text-xs text-slate-400 py-12 project-title">
         <div className="w-16 h-px bg-slate-200 mx-auto mb-4"></div>
-        © {new Date().getFullYear()} {projectData.university} <br/> 
+        © {new Date().getFullYear()} {projectData.university}
+        <br />
         <span className="mt-1 block">All Rights Reserved</span>
       </footer>
     </div>
