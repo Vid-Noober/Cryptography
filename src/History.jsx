@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import General from "./assets/public/General.png";
 import Affine from "./assets/public/Affine.png";
 import Transposition from "./assets/public/Transposition.png";
-import RSA from "./assets/public/RSA.png";
+import RSAImg from "./assets/public/RSA.png";
 
 /* ===================== MAIN COMPONENT ===================== */
 const History = () => {
@@ -11,21 +11,17 @@ const History = () => {
 
   return (
     <div className="min-h-screen bg-slate-100 py-12 px-4 space-y-12 font-sans">
-      {/* Page Header */}
-      <h1 className="text-4xl font-extrabold text-center text-indigo-700 mb-8 project-title">
+      <h1 className="text-4xl font-extrabold text-center text-indigo-700 mb-8">
         History of Cryptography
       </h1>
 
-      {/* Classical Cryptography Introduction */}
-      <SectionCard id="classical" title="I. Classical Cryptography">
+      <SectionCard title="I. Classical Cryptography">
         <p className="text-black leading-relaxed">
-          Classical cryptography refers to the traditional methods of encryption
-          used before the modern computer era. These techniques were mainly based
-          on substitution and transposition of letters.
+          Classical cryptography refers to traditional encryption techniques
+          based on substitution and transposition before the modern computer era.
         </p>
       </SectionCard>
 
-      {/* Cipher Sections */}
       <CaesarSection />
       <GeneralShiftSection />
       <AffineSection />
@@ -41,42 +37,30 @@ const CaesarSection = () => {
   const [result, setResult] = useState("No Result");
 
   const shift = (value) => {
-    const output = text.toUpperCase().split("").map((char) => {
-      const code = char.charCodeAt(0);
-      if (code >= 65 && code <= 90) {
-        let moved = (code - 65 + value) % 26;
-        if (moved < 0) moved += 26;
-        return String.fromCharCode(moved + 65);
-      }
-      return char;
-    }).join("");
+    const output = text
+      .toUpperCase()
+      .split("")
+      .map((char) => {
+        const code = char.charCodeAt(0);
+        if (code >= 65 && code <= 90) {
+          let moved = (code - 65 + value) % 26;
+          if (moved < 0) moved += 26;
+          return String.fromCharCode(moved + 65);
+        }
+        return char;
+      })
+      .join("");
     setResult(output);
   };
 
   return (
     <SectionCard title="I.I Caesar Cipher">
-      <div className="flex flex-col md:flex-row gap-6">
-        <div className="flex-1 space-y-3">
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Caesar_cipher_left_shift_of_3.svg"
-            alt="Caesar Cipher"
-            className="w-full h-48 object-cover rounded-lg border border-slate-300"
-          />
-          <p className="text-black project-title">
-            Julius Caesar shifted letters in the alphabet by three positions to send secret messages to his generals.
-          </p>
-          <p className="text-sm text-black">Source: caesarcipher.net</p>
-        </div>
-
-        <div className="flex-1 space-y-3">
-          <DemoInput text={text} setText={setText} placeholder="Ex: Will you marry me " />
-          <div className="flex gap-3 mt-2">
-            <Button onClick={() => shift(3)}>Encrypt</Button>
-            <Button secondary onClick={() => shift(-3)}>Decrypt</Button>
-          </div>
-          <ResultBox result={result} />
-        </div>
+      <DemoInput text={text} setText={setText} placeholder="Ex: HELLO" />
+      <div className="flex gap-3 mt-3">
+        <Button onClick={() => shift(3)}>Encrypt</Button>
+        <Button secondary onClick={() => shift(-3)}>Decrypt</Button>
       </div>
+      <ResultBox result={result} />
     </SectionCard>
   );
 };
@@ -87,45 +71,34 @@ const GeneralShiftSection = () => {
   const [key, setKey] = useState(0);
   const [result, setResult] = useState("No Result");
 
-  const handleCipher = (isEncrypt) => {
+  const handleCipher = (encrypt) => {
     const shiftKey = parseInt(key) || 0;
-    const output = text.toUpperCase().split("").map((char) => {
-      const code = char.charCodeAt(0);
-      if (code >= 65 && code <= 90) {
-        let shift = isEncrypt ? shiftKey : -shiftKey;
-        let moved = (code - 65 + shift) % 26;
-        if (moved < 0) moved += 26;
-        return String.fromCharCode(moved + 65);
-      }
-      return char;
-    }).join("");
+    const output = text
+      .toUpperCase()
+      .split("")
+      .map((char) => {
+        const code = char.charCodeAt(0);
+        if (code >= 65 && code <= 90) {
+          let shift = encrypt ? shiftKey : -shiftKey;
+          let moved = (code - 65 + shift) % 26;
+          if (moved < 0) moved += 26;
+          return String.fromCharCode(moved + 65);
+        }
+        return char;
+      })
+      .join("");
     setResult(output);
   };
 
   return (
     <SectionCard title="I.II General Shift Cipher">
-      <div className="flex flex-col md:flex-row gap-6">
-        <div className="flex-1 space-y-3">
-          <img
-            src={General}
-            alt="General Shift Cipher"
-            className="w-full h-48 object-cover rounded-lg border border-slate-300"
-          />
-          <p className="text-black project-title">
-            The General Shift Cipher allows any integer value as the shift, making it more flexible than the Caesar Cipher.
-          </p>
-        </div>
-
-        <div className="flex-1 space-y-3">
-          <DemoInput text={text} setText={setText} placeholder="Ex: Will you marry me " />
-          <NumberInput label="Enter the key:" value={key} setValue={setKey} />
-          <div className="flex gap-3 mt-2">
-            <Button onClick={() => handleCipher(true)}>Encrypt</Button>
-            <Button secondary onClick={() => handleCipher(false)}>Decrypt</Button>
-          </div>
-          <ResultBox result={result} />
-        </div>
+      <DemoInput text={text} setText={setText} placeholder="Ex: Will you marry me " />
+      <NumberInput label="Enter Key" value={key} setValue={setKey} />
+      <div className="flex gap-3 mt-3">
+        <Button onClick={() => handleCipher(true)}>Encrypt</Button>
+        <Button secondary onClick={() => handleCipher(false)}>Decrypt</Button>
       </div>
+      <ResultBox result={result} />
     </SectionCard>
   );
 };
@@ -143,52 +116,50 @@ const AffineSection = () => {
   };
 
   const encrypt = () => {
-    const output = text.toUpperCase().split("").map((char) => {
-      const code = char.charCodeAt(0);
-      if (code >= 65 && code <= 90) {
-        let x = code - 65;
-        return String.fromCharCode(((a * x + b) % 26) + 65);
-      }
-      return char;
-    }).join("");
+    const output = text
+      .toUpperCase()
+      .split("")
+      .map((char) => {
+        const code = char.charCodeAt(0);
+        if (code >= 65 && code <= 90) {
+          let x = code - 65;
+          return String.fromCharCode(((a * x + b) % 26) + 65);
+        }
+        return char;
+      })
+      .join("");
     setResult(output);
   };
 
   const decrypt = () => {
     const inv = modInverse(a, 26);
     if (!inv) return setResult("Invalid key a");
-    const output = text.toUpperCase().split("").map((char) => {
-      const code = char.charCodeAt(0);
-      if (code >= 65 && code <= 90) {
-        let x = code - 65;
-        return String.fromCharCode((inv * (x - b + 26)) % 26 + 65);
-      }
-      return char;
-    }).join("");
+
+    const output = text
+      .toUpperCase()
+      .split("")
+      .map((char) => {
+        const code = char.charCodeAt(0);
+        if (code >= 65 && code <= 90) {
+          let x = code - 65;
+          return String.fromCharCode((inv * (x - b + 26)) % 26 + 65);
+        }
+        return char;
+      })
+      .join("");
     setResult(output);
   };
 
   return (
     <SectionCard title="I.III Affine Cipher">
-      <div className="flex flex-col md:flex-row gap-6">
-        <div className="flex-1 space-y-3">
-          <img src={Affine} alt="Affine Cipher" className="w-full h-48 object-cover rounded-lg border border-slate-300" />
-          <p className="text-black project-title">
-            The Affine Cipher combines multiplication and addition to encrypt letters.
-          </p>
-        </div>
-
-        <div className="flex-1 space-y-3">
-          <DemoInput text={text} setText={setText} placeholder="Ex: Will you marry me " />
-          <NumberInput label="Enter key a:" value={a} setValue={setA} />
-          <NumberInput label="Enter key b:" value={b} setValue={setB} />
-          <div className="flex gap-3 mt-2">
-            <Button onClick={encrypt}>Encrypt</Button>
-            <Button secondary onClick={decrypt}>Decrypt</Button>
-          </div>
-          <ResultBox result={result} />
-        </div>
+      <DemoInput text={text} setText={setText} placeholder="Ex: Will you marry me" />
+      <NumberInput label="Key a" value={a} setValue={setA} />
+      <NumberInput label="Key b" value={b} setValue={setB} />
+      <div className="flex gap-3 mt-3">
+        <Button onClick={encrypt}>Encrypt</Button>
+        <Button secondary onClick={decrypt}>Decrypt</Button>
       </div>
+      <ResultBox result={result} />
     </SectionCard>
   );
 };
@@ -202,8 +173,7 @@ const TranspositionSection = () => {
   const encrypt = () => {
     let res = "";
     for (let i = 0; i < key; i++)
-      for (let j = i; j < text.length; j += key)
-        res += text[j];
+      for (let j = i; j < text.length; j += key) res += text[j];
     setResult(res);
   };
 
@@ -211,62 +181,151 @@ const TranspositionSection = () => {
     let res = Array(text.length).fill("");
     let index = 0;
     for (let i = 0; i < key; i++)
-      for (let j = i; j < text.length; j += key)
-        res[j] = text[index++];
+      for (let j = i; j < text.length; j += key) res[j] = text[index++];
     setResult(res.join(""));
   };
 
   return (
     <SectionCard title="I.IV Transposition Cipher">
-      <div className="flex flex-col md:flex-row gap-6">
-        <div className="flex-1 space-y-3">
-          <img src={Transposition} alt="Transposition Cipher" className="w-full h-48 object-cover rounded-lg border border-slate-300" />
-          <p className="text-black project-title">
-            Transposition Cipher rearranges letters in a defined pattern according to the key.
-          </p>
-        </div>
-
-        <div className="flex-1 space-y-3">
-          <DemoInput text={text} setText={setText} placeholder="Ex: Will you marry me " />
-          <NumberInput label="Enter the key:" value={key} setValue={setKey} />
-          <div className="flex gap-3 mt-2">
-            <Button onClick={encrypt}>Encrypt</Button>
-            <Button secondary onClick={decrypt}>Decrypt</Button>
-          </div>
-          <ResultBox result={result} />
-        </div>
+      <DemoInput text={text} setText={setText} placeholder="Ex: Will you marry me" />
+      <NumberInput label="Enter Key" value={key} setValue={setKey} />
+      <div className="flex gap-3 mt-3">
+        <Button onClick={encrypt}>Encrypt</Button>
+        <Button secondary onClick={decrypt}>Decrypt</Button>
       </div>
+      <ResultBox result={result} />
     </SectionCard>
   );
 };
 
-/* ===================== RSA ===================== */
+/* ===================== RSA SECTION (UPDATED LIKE IMAGE) ===================== */
 const RSASection = () => {
   const [p, setP] = useState(61);
   const [q, setQ] = useState(53);
-  const [result, setResult] = useState("No Result");
+  const [e, setE] = useState(7);
 
-  const generate = () => {
-    const n = p * q;
-    const phi = (p - 1) * (q - 1);
-    setResult(`n = ${n}, φ(n) = ${phi}`);
+  const [n, setN] = useState(null);
+  const [phi, setPhi] = useState(null);
+  const [d, setD] = useState(null);
+
+  const [plainText, setPlainText] = useState("");
+  const [cipherText, setCipherText] = useState("");
+  const [decryptedText, setDecryptedText] = useState("");
+
+  const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
+
+  const modInverse = (e, phi) => {
+    for (let i = 1; i < phi; i++) {
+      if ((e * i) % phi === 1) return i;
+    }
+    return null;
+  };
+
+  const generateKeys = () => {
+    const primeP = parseInt(p);
+    const primeQ = parseInt(q);
+    const modulus = primeP * primeQ;
+    const totient = (primeP - 1) * (primeQ - 1);
+
+    if (gcd(e, totient) !== 1) {
+      alert("e must be coprime with φ(n)");
+      return;
+    }
+
+    const privateKey = modInverse(e, totient);
+
+    setN(modulus);
+    setPhi(totient);
+    setD(privateKey);
+  };
+
+  const encrypt = () => {
+    if (!n) return alert("Generate keys first!");
+
+    const encrypted = plainText
+      .toUpperCase()
+      .split("")
+      .map((char) => {
+        const code = char.charCodeAt(0);
+        if (code >= 65 && code <= 90) {
+          const m = code - 65;
+          return BigInt(m) ** BigInt(e) % BigInt(n);
+        }
+        return null;
+      })
+      .filter(Boolean)
+      .join(" ");
+
+    setCipherText(encrypted);
+  };
+
+  const decrypt = () => {
+    if (!d) return alert("Generate keys first!");
+
+    const decrypted = cipherText
+      .split(" ")
+      .map((num) => {
+        const c = BigInt(num);
+        const m = c ** BigInt(d) % BigInt(n);
+        return String.fromCharCode(Number(m) + 65);
+      })
+      .join("");
+
+    setDecryptedText(decrypted);
   };
 
   return (
     <SectionCard title="II. RSA Cryptography">
-      <div className="flex flex-col md:flex-row gap-6">
-        <div className="flex-1 space-y-3">
-          <img src={RSA} alt="RSA Cipher" className="w-full h-48 object-cover rounded-lg border border-slate-300" />
-          <p className="text-black project-title">
-            RSA is an asymmetric encryption algorithm based on prime numbers.
-          </p>
+      <div className="space-y-8">
+        <div className="bg-slate-50 p-6 rounded-xl border">
+          <h3 className="text-xl font-bold text-indigo-700 mb-4">
+             Key Generation
+          </h3>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <NumberInput label="Prime p" value={p} setValue={setP} />
+            <NumberInput label="Prime q" value={q} setValue={setQ} />
+          </div>
+
+          <NumberInput label="Public exponent e" value={e} setValue={setE} />
+          <Button onClick={generateKeys}>Generate Keys</Button>
+
+          {n && (
+            <div className="grid md:grid-cols-4 gap-4 mt-4">
+              <ResultMini title="Modulus n" value={n} />
+              <ResultMini title="Totient φ(n)" value={phi} />
+              <ResultMini title="Public e" value={e} />
+              <ResultMini title="Private d" value={d} />
+            </div>
+          )}
         </div>
 
-        <div className="flex-1 space-y-3">
-          <NumberInput label="Enter prime p:" value={p} setValue={setP} />
-          <NumberInput label="Enter prime q:" value={q} setValue={setQ} />
-          <Button onClick={generate}>Generate Key</Button>
-          <ResultBox result={result} />
+        <div className="bg-slate-50 p-6 rounded-xl border">
+          <h3 className="text-xl font-bold text-indigo-700 mb-4">
+             Encryption
+          </h3>
+
+          <DemoInput
+            text={plainText}
+            setText={setPlainText}
+            placeholder="Enter message..."
+          />
+          <Button onClick={encrypt}>Encrypt</Button>
+          <ResultBox result={cipherText || "Result will appear here.."} />
+        </div>
+
+        <div className="bg-slate-50 p-6 rounded-xl border">
+          <h3 className="text-xl font-bold text-indigo-700 mb-4">
+             Decryption
+          </h3>
+
+          <DemoInput
+            text={cipherText}
+            setText={setCipherText}
+            placeholder="Enter ciphertext..."
+          />
+          <Button onClick={decrypt}>Decrypt</Button>
+          <ResultBox result={decryptedText || "Result will appear here..."} />
         </div>
       </div>
     </SectionCard>
@@ -274,9 +333,9 @@ const RSASection = () => {
 };
 
 /* ===================== REUSABLE COMPONENTS ===================== */
-const SectionCard = ({ id, title, children }) => (
-  <div id={id} className="bg-white p-6 rounded-2xl shadow-xl border border-slate-200 max-w-4xl mx-auto my-6">
-    <h2 className="text-2xl font-bold text-indigo-700 mb-4 project-title">{title}</h2>
+const SectionCard = ({ title, children }) => (
+  <div className="bg-white p-6 rounded-2xl shadow-xl border max-w-4xl mx-auto my-6">
+    <h2 className="text-2xl font-bold text-indigo-700 mb-4">{title}</h2>
     {children}
   </div>
 );
@@ -285,7 +344,7 @@ const DemoInput = ({ text, setText, placeholder }) => (
   <input
     type="text"
     placeholder={placeholder}
-    className="w-full p-3 border rounded-lg bg-slate-50 focus:ring-2 focus:ring-indigo-400 outline-none text-black project-title"
+    className="w-full p-3 border rounded-lg bg-slate-50"
     value={text}
     onChange={(e) => setText(e.target.value)}
   />
@@ -293,10 +352,12 @@ const DemoInput = ({ text, setText, placeholder }) => (
 
 const NumberInput = ({ label, value, setValue }) => (
   <div className="mt-3">
-    <label className="block text-xs font-bold text-black uppercase mb-1 project-title">{label}</label>
+    <label className="block text-xs font-bold uppercase mb-1">
+      {label}
+    </label>
     <input
       type="number"
-      className="w-full p-3 border rounded-lg bg-slate-50 focus:ring-2 focus:ring-indigo-400 outline-none text-black project-title"
+      className="w-full p-3 border rounded-lg bg-slate-50"
       value={value}
       onChange={(e) => setValue(e.target.value)}
     />
@@ -306,9 +367,9 @@ const NumberInput = ({ label, value, setValue }) => (
 const Button = ({ children, onClick, secondary }) => (
   <button
     onClick={onClick}
-    className={`flex-1 py-3 px-5 rounded-xl font-bold transition project-title ${
+    className={`w-full py-3 px-5 rounded-xl font-bold mt-3 ${
       secondary
-        ? "bg-slate-200 text-slate-700 hover:bg-slate-300"
+        ? "bg-slate-200 hover:bg-slate-300"
         : "bg-indigo-600 text-white hover:bg-indigo-700"
     }`}
   >
@@ -317,9 +378,16 @@ const Button = ({ children, onClick, secondary }) => (
 );
 
 const ResultBox = ({ result }) => (
-  <div className="mt-4 p-4 bg-indigo-50 rounded-xl border border-indigo-100">
-    <p className="text-xs font-bold text-indigo-400 uppercase project-title">Result:</p>
-    <p className="text-lg font-mono font-bold text-black break-all project-title">{result}</p>
+  <div className="mt-4 p-4 bg-indigo-50 rounded-xl border">
+    <p className="text-xs font-bold uppercase text-indigo-400">Result:</p>
+    <p className="text-lg font-mono font-bold break-all">{result}</p>
+  </div>
+);
+
+const ResultMini = ({ title, value }) => (
+  <div className="bg-white p-4 rounded-lg border text-center">
+    <p className="text-xs uppercase text-indigo-400 font-bold">{title}</p>
+    <p className="text-lg font-mono font-bold">{value}</p>
   </div>
 );
 
