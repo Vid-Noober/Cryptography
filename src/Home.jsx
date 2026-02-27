@@ -25,7 +25,7 @@ const Home = () => {
       { name: "Ms. Bo Leakena", id: "ID: 000069789" },
       { name: "Ms. Veng Punlork", id: "ID: 000070321" },
       { name: "Mr. Hour Panhasal", id: "ID: 000071654" },
-      { name: "Mr. Sear Monyordom", id: "ID: 000072987" },
+      { name: "Mr. Sear Monyoudom", id: "ID: 000072987" },
     ],
     description:
       "This demonstration presents applications of number theory, including classical encryption methods and the RSA algorithm.",
