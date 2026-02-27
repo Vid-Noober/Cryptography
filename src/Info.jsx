@@ -23,7 +23,7 @@ export default function CryptographyReport() {
           </h2>
 
           <img
-            src="https://images.unsplash.com/photo-1581090700227-1e8a1b6c5c5d"
+            src="https://cdn1.slideserve.com/2530466/classical-cryptography-n.jpg"
             alt="Ancient encryption manuscript"
             className="w-full h-64 md:h-96 object-cover rounded-3xl shadow-lg hover:scale-[1.01] transition duration-300"
           />
@@ -89,7 +89,7 @@ export default function CryptographyReport() {
           </h2>
 
           <img
-            src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b"
+            src="https://www.clickssl.net/wp-content/uploads/2022/11/how-does-an-rsa-work.png"
             alt="Digital security concept"
             className="w-full h-64 md:h-96 object-cover rounded-3xl shadow-lg hover:scale-[1.01] transition duration-300"
           />
