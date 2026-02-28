@@ -106,12 +106,16 @@ const GeneralShiftSection = () => {
 /* ===================== AFFINE ===================== */
 const AffineSection = () => {
   const [text, setText] = useState("");
-  const [a, setA] = useState(5);
-  const [b, setB] = useState(8);
-  const [result, setResult] = useState("No Result");
+  const [a, setA] = useState(1);
+  const [b, setB] = useState(3);
+  const [result, setResult] = useState("");
+
+  const validAValues = [1,3,5,7,9,11,15,17,19,21,23,25];
 
   const modInverse = (a, m) => {
-    for (let x = 1; x < m; x++) if ((a * x) % m === 1) return x;
+    for (let x = 1; x < m; x++) {
+      if ((a * x) % m === 1) return x;
+    }
     return null;
   };
 
@@ -133,7 +137,10 @@ const AffineSection = () => {
 
   const decrypt = () => {
     const inv = modInverse(a, 26);
-    if (!inv) return setResult("Invalid key a");
+    if (!inv) {
+      setResult("Invalid key 'a'");
+      return;
+    }
 
     const output = text
       .toUpperCase()
@@ -142,7 +149,9 @@ const AffineSection = () => {
         const code = char.charCodeAt(0);
         if (code >= 65 && code <= 90) {
           let x = code - 65;
-          return String.fromCharCode((inv * (x - b + 26)) % 26 + 65);
+          return String.fromCharCode(
+            ((inv * (x - b + 26)) % 26) + 65
+          );
         }
         return char;
       })
@@ -152,14 +161,97 @@ const AffineSection = () => {
 
   return (
     <SectionCard title="I.III Affine Cipher">
-      <DemoInput text={text} setText={setText} placeholder="Ex: Will you marry me" />
-      <NumberInput label="Key a" value={a} setValue={setA} />
-      <NumberInput label="Key b" value={b} setValue={setB} />
-      <div className="flex gap-3 mt-3">
-        <Button onClick={encrypt}>Encrypt</Button>
-        <Button secondary onClick={decrypt}>Decrypt</Button>
+      <div className="space-y-6">
+
+        {/* TEXT AREA */}
+        <div>
+          <label className="text-sm font-bold text-gray-600">
+            Text to Process
+          </label>
+          <textarea
+            rows="4"
+            className="w-full p-4 mt-2 border rounded-xl bg-slate-100"
+            placeholder="HELLO"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+        </div>
+
+        {/* KEYS */}
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* MULTIPLIER */}
+          <div>
+            <label className="text-sm font-bold text-gray-600">
+              Multiplier (a)
+            </label>
+            <select
+              className="w-full p-3 mt-2 border rounded-xl bg-slate-100"
+              value={a}
+              onChange={(e) => setA(parseInt(e.target.value))}
+            >
+              {validAValues.map((val) => (
+                <option key={val} value={val}>
+                  {val} {val === 1 && "(Caesar with shift b)"}
+                </option>
+              ))}
+            </select>
+            <p className="text-xs text-gray-500 mt-1">
+              Must be coprime with 26
+            </p>
+          </div>
+
+          {/* SHIFT */}
+          <div>
+            <label className="text-sm font-bold text-gray-600">
+              Shift (b)
+            </label>
+            <input
+              type="number"
+              className="w-full p-3 mt-2 border rounded-xl bg-slate-100"
+              value={b}
+              onChange={(e) => setB(parseInt(e.target.value))}
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              0–25, any integer
+            </p>
+          </div>
+        </div>
+
+        {/* INFO BOX */}
+        <div className="bg-indigo-50 border border-indigo-200 p-4 rounded-xl text-sm text-indigo-700">
+          The multiplier 'a' must be coprime with 26 (no common factors other than 1) 
+          for the cipher to be reversible.  
+          Valid values: 1,3,5,7,9,11,15,17,19,21,23,25
+        </div>
+
+        {/* BUTTONS */}
+        <div className="flex gap-4">
+          <button
+            onClick={encrypt}
+            className="w-full py-3 rounded-xl font-bold bg-indigo-600 text-white hover:bg-indigo-700"
+          >
+            Encrypt
+          </button>
+
+          <button
+            onClick={decrypt}
+            className="w-full py-3 rounded-xl font-bold bg-purple-500 text-white hover:bg-purple-600"
+          >
+            Decrypt
+          </button>
+        </div>
+
+        {/* RESULT */}
+        <div className="bg-slate-100 p-4 rounded-xl border">
+          <p className="text-xs font-bold uppercase text-gray-500">
+            Result
+          </p>
+          <p className="text-lg font-mono font-bold break-all mt-2">
+            {result || "Result will appear here..."}
+          </p>
+        </div>
+
       </div>
-      <ResultBox result={result} />
     </SectionCard>
   );
 };
