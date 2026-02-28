@@ -258,34 +258,225 @@ const AffineSection = () => {
 
 /* ===================== TRANSPOSITION ===================== */
 const TranspositionSection = () => {
+  const [method, setMethod] = useState("rail"); // rail | columnar
   const [text, setText] = useState("");
-  const [key, setKey] = useState(2);
-  const [result, setResult] = useState("No Result");
+  const [rails, setRails] = useState(3);
+  const [result, setResult] = useState("");
 
-  const encrypt = () => {
-    let res = "";
-    for (let i = 0; i < key; i++)
-      for (let j = i; j < text.length; j += key) res += text[j];
-    setResult(res);
+  /* ================= RAIL FENCE ================= */
+
+  const railFenceEncrypt = (text, key) => {
+    if (key <= 1) return text;
+
+    let rail = Array.from({ length: key }, () => []);
+    let dirDown = false;
+    let row = 0;
+
+    for (let char of text) {
+      rail[row].push(char);
+      if (row === 0 || row === key - 1) dirDown = !dirDown;
+      row += dirDown ? 1 : -1;
+    }
+
+    return rail.flat().join("");
   };
 
-  const decrypt = () => {
-    let res = Array(text.length).fill("");
+  const railFenceDecrypt = (cipher, key) => {
+    if (key <= 1) return cipher;
+
+    let rail = Array.from({ length: key }, () =>
+      Array(cipher.length).fill(null)
+    );
+
+    let dirDown;
+    let row = 0,
+      col = 0;
+
+    // Mark zigzag
+    for (let i = 0; i < cipher.length; i++) {
+      if (row === 0) dirDown = true;
+      if (row === key - 1) dirDown = false;
+
+      rail[row][col++] = "*";
+      row += dirDown ? 1 : -1;
+    }
+
+    // Fill letters
     let index = 0;
-    for (let i = 0; i < key; i++)
-      for (let j = i; j < text.length; j += key) res[j] = text[index++];
-    setResult(res.join(""));
+    for (let i = 0; i < key; i++) {
+      for (let j = 0; j < cipher.length; j++) {
+        if (rail[i][j] === "*" && index < cipher.length) {
+          rail[i][j] = cipher[index++];
+        }
+      }
+    }
+
+    // Read zigzag
+    let result = "";
+    row = 0;
+    col = 0;
+    for (let i = 0; i < cipher.length; i++) {
+      if (row === 0) dirDown = true;
+      if (row === key - 1) dirDown = false;
+
+      result += rail[row][col++];
+      row += dirDown ? 1 : -1;
+    }
+
+    return result;
   };
+
+  /* ================= COLUMNAR ================= */
+
+  const columnarEncrypt = (text, key) => {
+    let columns = Array.from({ length: key }, () => "");
+    for (let i = 0; i < text.length; i++) {
+      columns[i % key] += text[i];
+    }
+    return columns.join("");
+  };
+
+  const columnarDecrypt = (cipher, key) => {
+    let rows = Math.ceil(cipher.length / key);
+    let columns = [];
+    let index = 0;
+
+    for (let i = 0; i < key; i++) {
+      columns.push(cipher.slice(index, index + rows));
+      index += rows;
+    }
+
+    let result = "";
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < key; c++) {
+        if (columns[c][r]) result += columns[c][r];
+      }
+    }
+
+    return result;
+  };
+
+  /* ================= HANDLER ================= */
+
+  const handleEncrypt = () => {
+    if (method === "rail")
+      setResult(railFenceEncrypt(text, rails));
+    else setResult(columnarEncrypt(text, rails));
+  };
+
+  const handleDecrypt = () => {
+    if (method === "rail")
+      setResult(railFenceDecrypt(text, rails));
+    else setResult(columnarDecrypt(text, rails));
+  };
+
+  /* ================= UI ================= */
 
   return (
     <SectionCard title="I.IV Transposition Cipher">
-      <DemoInput text={text} setText={setText} placeholder="Ex: Will you marry me" />
-      <NumberInput label="Enter Key" value={key} setValue={setKey} />
-      <div className="flex gap-3 mt-3">
-        <Button onClick={encrypt}>Encrypt</Button>
-        <Button secondary onClick={decrypt}>Decrypt</Button>
+      <div className="space-y-6">
+
+        {/* METHOD SELECT */}
+        <div>
+          <p className="text-sm font-bold text-gray-600 mb-2">
+            Transposition Method
+          </p>
+          <div className="flex gap-4">
+            <button
+              onClick={() => setMethod("rail")}
+              className={`w-full py-3 rounded-xl font-bold border ${
+                method === "rail"
+                  ? "bg-blue-600 text-white border-blue-600"
+                  : "bg-white border-gray-300"
+              }`}
+            >
+              Rail Fence
+            </button>
+
+            <button
+              onClick={() => setMethod("columnar")}
+              className={`w-full py-3 rounded-xl font-bold border ${
+                method === "columnar"
+                  ? "bg-blue-600 text-white border-blue-600"
+                  : "bg-white border-gray-300"
+              }`}
+            >
+              Columnar
+            </button>
+          </div>
+        </div>
+
+        {/* TEXT AREA */}
+        <div>
+          <label className="text-sm font-bold text-gray-600">
+            Text to Process
+          </label>
+          <textarea
+            rows="4"
+            className="w-full p-4 mt-2 border rounded-xl bg-slate-100"
+            placeholder="HELLO"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+        </div>
+
+        {/* RAIL COUNT */}
+        <div>
+          <p className="text-sm font-bold text-gray-600 mb-2">
+            {method === "rail"
+              ? "Number of Rails"
+              : "Number of Columns"}
+          </p>
+
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => rails > 2 && setRails(rails - 1)}
+              className="w-12 h-12 rounded-lg bg-slate-200 text-xl font-bold"
+            >
+              -
+            </button>
+
+            <span className="text-3xl font-bold text-blue-600">
+              {rails}
+            </span>
+
+            <button
+              onClick={() => setRails(rails + 1)}
+              className="w-12 h-12 rounded-lg bg-slate-200 text-xl font-bold"
+            >
+              +
+            </button>
+          </div>
+        </div>
+
+        {/* BUTTONS */}
+        <div className="flex gap-4">
+          <button
+            onClick={handleEncrypt}
+            className="w-full py-3 rounded-xl font-bold text-white bg-gradient-to-r from-blue-500 to-indigo-500"
+          >
+             Encrypt
+          </button>
+
+          <button
+            onClick={handleDecrypt}
+            className="w-full py-3 rounded-xl font-bold text-white bg-gradient-to-r from-purple-500 to-pink-500"
+          >
+             Decrypt
+          </button>
+        </div>
+
+        {/* RESULT */}
+        <div className="bg-slate-100 p-4 rounded-xl border">
+          <p className="text-xs font-bold uppercase text-gray-500">
+            Result
+          </p>
+          <p className="text-lg font-mono font-bold break-all mt-2">
+            {result || "Result will appear here..."}
+          </p>
+        </div>
+
       </div>
-      <ResultBox result={result} />
     </SectionCard>
   );
 };
